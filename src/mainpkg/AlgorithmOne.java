@@ -78,35 +78,37 @@ public class AlgorithmOne {
 	}
 
 	/*
-	 * This is the first algorithm to count the number of interesting points. It
+	 * This is the first DC algorithm to count the number of interesting points. It
 	 * return the count of interesting points.
 	 */
-	public static int countUsingAlgorithmOne(int startIndex, int endIndex, int numOfDiamensions, ArrayList<ArrayList<Float>> pointsArray) {
+	public static int countUsingAlgorithm01(int startIndex, int endIndex, int numOfDiamensions, ArrayList<ArrayList<Float>> pointsArray) {
 		int interestingPointsCount = 0;
 //		System.out.println("startIndex "+startIndex);
 //		System.out.println("endIndex "+endIndex);
 		int midIndex = ((endIndex-startIndex)/2)+1;
 		if(startIndex>=endIndex) {System.out.println("Killing the thread");System.exit(0);}
 		if (endIndex - startIndex <= 2)
-			SimpleAlgo3(startIndex, endIndex, numOfDiamensions, pointsArray);
+			Algorithm01(startIndex, endIndex, numOfDiamensions, pointsArray);
 		else if ((endIndex - midIndex) <= 2)
-			 SimpleAlgo3(startIndex, endIndex, numOfDiamensions, pointsArray);
+			 Algorithm01(startIndex, endIndex, numOfDiamensions, pointsArray);
 		else {
 //			System.out.println("startIndex ="+ startIndex);
 //			System.out.println( "startIndex+midIndex-1 ="+ (startIndex+midIndex-1));
-			countUsingAlgorithmOne(startIndex, startIndex+midIndex-1, numOfDiamensions, pointsArray);
+			countUsingAlgorithm01(startIndex, startIndex+midIndex-1, numOfDiamensions, pointsArray);
 //			System.out.println("startIndex+midIndex = "+ startIndex+midIndex);
 //			System.out.println("endIndex ="+ endIndex);
-			countUsingAlgorithmOne(startIndex+midIndex, endIndex, numOfDiamensions, pointsArray);
+			countUsingAlgorithm01(startIndex+midIndex, endIndex, numOfDiamensions, pointsArray);
 		}
+		// Count the number of interesting points
 		for (int i=0; i<endIndex; i++)
 			if (carPointsArray.get(i).get(0) != -999.999f)
 				interestingPointsCount++;
-
+		// return count - useful only on top most level
 		return interestingPointsCount;
 	}
 	
-	public static void SimpleAlgo3(int start, int end, int d, ArrayList<ArrayList<Float>> pointsArray) {
+	// This is the operational part of Alg01 where comparisons are made and points flagged
+	public static void Algorithm01(int start, int end, int d, ArrayList<ArrayList<Float>> pointsArray) {
 //		System.out.println("start "+start);
 //		System.out.println("end "+end);
 		for (int i = start -1; i < end; i++) {
@@ -136,11 +138,63 @@ public class AlgorithmOne {
 				}
 			}
 		}
-		/*//Printing interesting points
-		 * for (int i=0; i<n; i++) if (isBest.get(i)) { for (int k=0; k<d; k++)
-		 * System.out.print(pointsArray.get(i).get(k) + ""); System.out.println(); }
-		 */
 	}
+	
+	/*
+	 * This is the second DC algorithm to count the number of interesting points. It
+	 * return the count of interesting points.
+	 */
+	public static int countUsingAlgorithm02(int startIndex, int endIndex, int numOfDiamensions, ArrayList<ArrayList<Float>> pointsArray) {
+		int interestingPointsCount = 0;
+//		System.out.println("startIndex "+startIndex);
+//		System.out.println("endIndex "+endIndex);
+		int midIndex = ((endIndex-startIndex)/2)+1;
+		if(startIndex>=endIndex) {System.out.println("Killing the thread");System.exit(0);}
+		if (endIndex - startIndex <= 2)
+			Algorithm01(startIndex, endIndex, numOfDiamensions, pointsArray);
+		else if ((endIndex - midIndex) <= 2)
+			 Algorithm01(startIndex, endIndex, numOfDiamensions, pointsArray);
+		else {
+//			System.out.println("startIndex ="+ startIndex);
+//			System.out.println( "startIndex+midIndex-1 ="+ (startIndex+midIndex-1));
+			countUsingAlgorithm01(startIndex, startIndex+midIndex-1, numOfDiamensions, pointsArray);
+//			System.out.println("startIndex+midIndex = "+ startIndex+midIndex);
+//			System.out.println("endIndex ="+ endIndex);
+			countUsingAlgorithm01(startIndex+midIndex, endIndex, numOfDiamensions, pointsArray);
+		}
+		// Count the number of interesting points
+		for (int i=0; i<endIndex; i++)
+			if (carPointsArray.get(i).get(0) != -999.999f)
+				interestingPointsCount++;
+		// return count - useful only on top most level
+		return interestingPointsCount;
+	}
+	
+	// This is the operational part of Alg02 where comparisons are made and points flagged
+	public static void Algorithm02(int start, int end, int d, ArrayList<ArrayList<Float>> pointsArray) {
+//		System.out.println("start "+start);
+//		System.out.println("end "+end);
+		for (int i = start -1; i < end; i++) {
+			for (int j = start -1; j < end; j++) {
+//				System.out.println("i "+i);
+				if (carPointsArray.get(i).get(0) != -999.999f) {
+					boolean not_better = true;
+					for (int k = 0; k < d; k++)
+						if (pointsArray.get(i).get(k) > pointsArray.get(j).get(k)) {
+							not_better = false;
+//							System.out.println("i "+i+" j "+j+ " k "+k);
+//							System.out.println("pointsArray.i.k > pointsArray.j.k::::: "+pointsArray.get(i).get(k) +" :: "+ pointsArray.get(j).get(k)); 
+						}
+
+					if (not_better) {
+//						System.out.println(pointsArray.get(i));
+						pointsArray.get(i).set(0, -999.999f);
+					}
+				}
+			}
+		}
+	}
+	
 	
 	/* Sample algorithm given by professor */
 	public static int SimpleAlgo2(int n, int d, ArrayList<ArrayList<Float>> pointsArray) {
@@ -204,32 +258,36 @@ public class AlgorithmOne {
 		// Record ending time 
 		end = System.nanoTime(); 
 		System.out.println("Time taken by SimpleAlgo2 is " + Double.valueOf((new DecimalFormat("#0.######")).format((double)(end - start)/1000000000)) + " seconds!");
+		System.out.println("Time taken by SimpleAlgo2 is " + (end - start)+ " nanoseconds!");
 		
-/*		// Printing interesting points
-				System.out.println("\n\nInteresting points are : ");
-				for (int i = 0; i < rows; i++)
-					if (carPointsArray.get(i).get(0) != -999.999f) {
-						for (int k = 0; k < dimensions; k++)
-							System.out.print(carPointsArray.get(i).get(k) + "\t");
-						System.out.println();
-					} */
 		
 		// Record starting time
 		start = System.nanoTime();
-		// Calling SimpleAlgo2
-		System.out.println("\nNumber of interesting points using AlgorithmOne : " + countUsingAlgorithmOne(1,rows, dimensions, carPointsArray));
+		// Calling Algorithm01
+		System.out.println("\nNumber of interesting points using Algorithm01 : " + countUsingAlgorithm01(1,rows, dimensions, carPointsArray));
 		// Record ending time
 		end = System.nanoTime();
 		System.out.println("Time taken by Algorithm01 is " + Double.valueOf((new DecimalFormat("#0.######")).format((double)(end - start)/1000000000)) + " seconds!");
+		System.out.println("Time taken by Algorithm01 is " + (end - start)+ " nanoseconds!");
+		
+		
+		// Record starting time
+		start = System.nanoTime();
+		// Calling Algorithm02
+		System.out.println("\nNumber of interesting points using Algorithm02 : " + countUsingAlgorithm02(1,rows, dimensions, carPointsArray));
+		// Record ending time
+		end = System.nanoTime();
+		System.out.println("Time taken by Algorithm02 is " + Double.valueOf((new DecimalFormat("#0.######")).format((double)(end - start)/1000000000)) + " seconds!");
+		System.out.println("Time taken by Algorithm02 is " + (end - start)+ " nanoseconds!");
 
 		// Printing interesting points
-	/*	System.out.println("\n\nInteresting points are : ");
+		System.out.println("\n\nInteresting points are : ");
 		for (int i = 0; i < rows; i++)
 			if (carPointsArray.get(i).get(0) != -999.999f) {
 				for (int k = 0; k < dimensions; k++)
 					System.out.print(carPointsArray.get(i).get(k) + "\t");
 				System.out.println();
-			} */
+			} 
 
 	}
 
