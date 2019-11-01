@@ -2,6 +2,8 @@ package mainpkg;
 
 import java.util.*;
 import java.io.*;
+import java.text.DecimalFormat;
+
 import javax.swing.*;
 
 public class AlgorithmOne {
@@ -188,20 +190,20 @@ public class AlgorithmOne {
 		long start, end;
 		
 //		readInput(5,2); /* This can be used for small input set */
-		String filePath = System.getProperty("user.dir") + "\\src\\mainpkg\\" + "4.in"; /* Specify your file name here */
+		String filePath = System.getProperty("user.dir") + "\\src\\mainpkg\\" + "5.in"; /* Specify your file name here */
 		
 		/* Read and populate the Array */
 		carPointsArray = readInput(filePath);
 		System.out.println("Number of rows: "+rows);
 		System.out.println("Number of dimensions: "+dimensions);
 		
-	/*	// Record starting time 
+		// Record starting time 
 		start = System.nanoTime(); 
 		// Calling SimpleAlgo2 
 		System.out.println("\nNumber of interesting points using SimpleAlgo2 : "+ SimpleAlgo2(rows, dimensions, carPointsArray));
 		// Record ending time 
 		end = System.nanoTime(); 
-		System.out.println("Time taken by SimpleAlgo2 is " + (end-start) + " nanoseconds!");
+		System.out.println("Time taken by SimpleAlgo2 is " + Double.valueOf((new DecimalFormat("#0.######")).format((double)(end - start)/1000000000)) + " seconds!");
 		
 /*		// Printing interesting points
 				System.out.println("\n\nInteresting points are : ");
@@ -218,16 +220,16 @@ public class AlgorithmOne {
 		System.out.println("\nNumber of interesting points using AlgorithmOne : " + countUsingAlgorithmOne(1,rows, dimensions, carPointsArray));
 		// Record ending time
 		end = System.nanoTime();
-		System.out.println("Time taken by Algorithm01 is " + (end - start) + " nanoseconds!");
+		System.out.println("Time taken by Algorithm01 is " + Double.valueOf((new DecimalFormat("#0.######")).format((double)(end - start)/1000000000)) + " seconds!");
 
 		// Printing interesting points
-		System.out.println("\n\nInteresting points are : ");
+	/*	System.out.println("\n\nInteresting points are : ");
 		for (int i = 0; i < rows; i++)
 			if (carPointsArray.get(i).get(0) != -999.999f) {
 				for (int k = 0; k < dimensions; k++)
 					System.out.print(carPointsArray.get(i).get(k) + "\t");
 				System.out.println();
-			} 
+			} */
 
 	}
 
