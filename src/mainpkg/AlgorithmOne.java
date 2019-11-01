@@ -79,17 +79,25 @@ public class AlgorithmOne {
 	 * This is the first algorithm to count the number of interesting points. It
 	 * return the count of interesting points.
 	 */
-	public static int countUsingAlgorithmOne(int numOfRows, int numOfDiamensions, ArrayList<ArrayList<Float>> pointsArray) {
+	public static int countUsingAlgorithmOne(int startIndex, int endIndex, int numOfDiamensions, ArrayList<ArrayList<Float>> pointsArray) {
 		int interestingPointsCount = 0;
-		if (numOfRows < 2)
-			SimpleAlgo3(1, numOfRows, numOfDiamensions, pointsArray);
-		else if (numOfRows - numOfRows / 2 < 2)
-			 SimpleAlgo3(1, numOfRows, numOfDiamensions, pointsArray);
+//		System.out.println("startIndex "+startIndex);
+//		System.out.println("endIndex "+endIndex);
+		int midIndex = ((endIndex-startIndex)/2)+1;
+		if(startIndex>=endIndex) {System.out.println("Killing the thread");System.exit(0);}
+		if (endIndex - startIndex <= 2)
+			SimpleAlgo3(startIndex, endIndex, numOfDiamensions, pointsArray);
+		else if ((endIndex - midIndex) <= 2)
+			 SimpleAlgo3(startIndex, endIndex, numOfDiamensions, pointsArray);
 		else {
-			SimpleAlgo3(1, (numOfRows / 2), numOfDiamensions, pointsArray);
-			SimpleAlgo3((numOfRows / 2 + 1), numOfRows, numOfDiamensions, pointsArray);
+//			System.out.println("startIndex ="+ startIndex);
+//			System.out.println( "startIndex+midIndex-1 ="+ (startIndex+midIndex-1));
+			countUsingAlgorithmOne(startIndex, startIndex+midIndex-1, numOfDiamensions, pointsArray);
+//			System.out.println("startIndex+midIndex = "+ startIndex+midIndex);
+//			System.out.println("endIndex ="+ endIndex);
+			countUsingAlgorithmOne(startIndex+midIndex, endIndex, numOfDiamensions, pointsArray);
 		}
-		for (int i=0; i<numOfRows; i++)
+		for (int i=0; i<endIndex; i++)
 			if (carPointsArray.get(i).get(0) != -999.999f)
 				interestingPointsCount++;
 
@@ -97,11 +105,11 @@ public class AlgorithmOne {
 	}
 	
 	public static void SimpleAlgo3(int start, int end, int d, ArrayList<ArrayList<Float>> pointsArray) {
-		System.out.println("start "+start);
-		System.out.println("end "+end);
+//		System.out.println("start "+start);
+//		System.out.println("end "+end);
 		for (int i = start -1; i < end; i++) {
 			for (int j = start -1; j < end; j++) {
-				System.out.println("i "+i);
+//				System.out.println("i "+i);
 				if (carPointsArray.get(i).get(0) != -999.999f) {
 					boolean worse_somewhere = false;
 					for (int k = 0; k < d; k++)
@@ -180,28 +188,37 @@ public class AlgorithmOne {
 		long start, end;
 		
 //		readInput(5,2); /* This can be used for small input set */
-		String filePath = System.getProperty("user.dir") + "\\src\\mainpkg\\" + "1.in"; /* Specify your file name here */
+		String filePath = System.getProperty("user.dir") + "\\src\\mainpkg\\" + "4.in"; /* Specify your file name here */
 		
 		/* Read and populate the Array */
 		carPointsArray = readInput(filePath);
 		System.out.println("Number of rows: "+rows);
 		System.out.println("Number of dimensions: "+dimensions);
 		
-/*		// Record starting time 
+	/*	// Record starting time 
 		start = System.nanoTime(); 
 		// Calling SimpleAlgo2 
 		System.out.println("\nNumber of interesting points using SimpleAlgo2 : "+ SimpleAlgo2(rows, dimensions, carPointsArray));
 		// Record ending time 
 		end = System.nanoTime(); 
-		System.out.println("Time taken by SimpleAlgo2 is " + (end-start) + " nanoseconds!");*/
+		System.out.println("Time taken by SimpleAlgo2 is " + (end-start) + " nanoseconds!");
+		
+/*		// Printing interesting points
+				System.out.println("\n\nInteresting points are : ");
+				for (int i = 0; i < rows; i++)
+					if (carPointsArray.get(i).get(0) != -999.999f) {
+						for (int k = 0; k < dimensions; k++)
+							System.out.print(carPointsArray.get(i).get(k) + "\t");
+						System.out.println();
+					} */
 		
 		// Record starting time
 		start = System.nanoTime();
 		// Calling SimpleAlgo2
-		System.out.println("\nNumber of interesting points using AlgorithmOne : " + countUsingAlgorithmOne(rows, dimensions, carPointsArray));
+		System.out.println("\nNumber of interesting points using AlgorithmOne : " + countUsingAlgorithmOne(1,rows, dimensions, carPointsArray));
 		// Record ending time
 		end = System.nanoTime();
-		System.out.println("Time taken by AlgorithmOne is " + (end - start) + " nanoseconds!");
+		System.out.println("Time taken by Algorithm01 is " + (end - start) + " nanoseconds!");
 
 		// Printing interesting points
 		System.out.println("\n\nInteresting points are : ");
