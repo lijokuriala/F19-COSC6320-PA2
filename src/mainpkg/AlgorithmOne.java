@@ -165,6 +165,37 @@ public class AlgorithmOne {
 			}
 		}
 	} // end Algorithm02
+	
+	
+	// Quick Sort partition function
+	public static int qPartition(ArrayList<ArrayList<Float>> pointsArray, int low, int high, int dia){
+		ArrayList<Float> pivot =  pointsArray.get(high);
+		int i = low-1;
+		for(int j = low;j<high;j++) {
+			if(pointsArray.get(j).get(dia)<pivot.get(dia)) {
+				i++;
+				ArrayList<Float> temp = pointsArray.get(i);
+				pointsArray.set(i, pointsArray.get(j));
+				pointsArray.set(j, temp);
+			}
+		}
+		ArrayList<Float> temp = pointsArray.get(i+1);
+		pointsArray.set(i+1, pointsArray.get(high));
+		pointsArray.set(high, temp);
+		
+		return (i+1);
+	}
+	
+	public static void qSort(ArrayList<ArrayList<Float>> pointsArray, int low, int high, int dia) {
+		if(low<high) {
+			int pIndex = qPartition(pointsArray,low,high,dia);
+			qSort(pointsArray,low,pIndex-1,dia);
+			qSort(pointsArray,pIndex+1,high,dia);
+		}
+	}
+	
+	
+	
 
 	/* Sample algorithm2 given by professor */
 	public static int SimpleAlgo2(int n, int d, ArrayList<ArrayList<Float>> pointsArray) {
@@ -210,7 +241,7 @@ public class AlgorithmOne {
 		long start, end;
 
 //		readInput(5,2); /* This can be used for small input set */
-		String filePath = System.getProperty("user.dir") + "\\src\\mainpkg\\" + "5.in"; /* Specify your file name here */
+		String filePath = System.getProperty("user.dir") + "\\src\\mainpkg\\" + "4.in"; /* Specify your file name here */
 
 		/* Read and populate the Array */
 		carPointsArray = readInput(filePath);
@@ -235,6 +266,7 @@ public class AlgorithmOne {
 		System.out.println("Time taken by Algorithm01 is " + Double.valueOf((new DecimalFormat("#0.######")).format((double) (end - start) / 1000000000)) + " seconds!");
 		System.out.println("Time taken by Algorithm01 is " + (end - start) + " nanoseconds!");
 
+		
 		// Record starting time
 		start = System.nanoTime();
 		// Calling Algorithm02
@@ -243,9 +275,10 @@ public class AlgorithmOne {
 		end = System.nanoTime();
 		System.out.println("Time taken by Algorithm02 is " + Double.valueOf((new DecimalFormat("#0.######")).format((double) (end - start) / 1000000000)) + " seconds!");
 		System.out.println("Time taken by Algorithm02 is " + (end - start) + " nanoseconds!");
-
+		
+		
 		// Printing interesting points
-	/*	System.out.println("\n\nInteresting points are : ");
+		/*System.out.println("\n\nInteresting points are : ");
 		for (int i = 0; i < rows; i++)
 			if (carPointsArray.get(i).get(0) != -999.999f) {
 				for (int k = 0; k < dimensions; k++)
